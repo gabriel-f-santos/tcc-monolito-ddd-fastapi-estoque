@@ -1,0 +1,46 @@
+# Testing
+pytest
+pytest-asyncio
+pytest-cov
+pytest-mock
+factory-boy
+
+# HTTP Testing
+httpx
+
+# Code Quality & Formatting
+black
+isort
+flake8
+mypy
+
+# Pre-commit hooks
+pre-commit
+
+# Linting plugins
+flake8-docstrings
+flake8-import-order
+flake8-bugbear
+
+# Security
+bandit
+safety
+
+# Documentation
+mkdocs
+mkdocs-material
+
+# Development utilities
+ipython
+python-dotenv
+
+# Database management
+pgcli
+
+# Load testing (para coleta de dados)
+locust
+
+# Memory profiling
+memory-profiler
+psutil
+ipdb

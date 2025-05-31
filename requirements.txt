@@ -1,0 +1,29 @@
+# requirements.txt
+# Core Framework
+fastapi
+uvicorn[standard]
+
+# Database & ORM
+sqlalchemy
+alembic
+psycopg2-binary
+
+# Data Validation
+pydantic[email]
+pydantic-settings
+
+# Authentication & Security
+pyjwt
+passlib[bcrypt]
+python-multipart
+python-jose[cryptography]
+
+# Logging & Monitoring
+structlog
+prometheus-client
+
+# HTTP Client (for health checks)
+httpx
+
+# Environment
+python-dotenv
