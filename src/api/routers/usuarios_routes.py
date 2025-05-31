@@ -29,7 +29,7 @@ async def create_user(
     db: Annotated[AsyncSession, Depends(get_db)],
     _: Annotated[Usuario, Depends(require_permission("usuarios:write"))]
 ):
-    import ipdb; ipdb.set_trace()
+
     """Create new user."""
     try:
         user_service = UsuarioApplicationService(db)

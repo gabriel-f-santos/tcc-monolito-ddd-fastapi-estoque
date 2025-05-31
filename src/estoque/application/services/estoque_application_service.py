@@ -224,64 +224,6 @@ class EstoqueApplicationService(BaseApplicationService[EstoqueProduto]):
             await self.db.rollback()
             raise
     
-    async def reserve_stock(self, reserva_dto: EstoqueReservaDTO) -> EstoqueResponseDTO:
-        """Reserve stock."""
-        try:
-            # Get inventory
-            inventory = await self.estoque_repository.get_by_produto_id(reserva_dto.produto_id)
-            if inventory is None:
-                raise BusinessRuleException(f"Inventory not found for product: {reserva_dto.produto_id}")
-            
-            # Reserve stock
-            inventory.reservar_estoque(reserva_dto.quantidade)
-            
-            # Save changes
-            inventory = await self.estoque_repository.update(inventory)
-            await self.db.commit()
-            
-            logger.info(
-                "Stock reserved",
-                product_id=str(reserva_dto.produto_id),
-                quantity=reserva_dto.quantidade,
-                total_reserved=inventory.quantidade_reservada
-            )
-            
-            return self._entity_to_response_dto(inventory)
-            
-        except Exception as e:
-            logger.error("Reserve stock failed", product_id=str(reserva_dto.produto_id), error=str(e))
-            await self.db.rollback()
-            raise
-    
-    async def release_reservation(self, reserva_dto: EstoqueReservaDTO) -> EstoqueResponseDTO:
-        """Release reserved stock."""
-        try:
-            # Get inventory
-            inventory = await self.estoque_repository.get_by_produto_id(reserva_dto.produto_id)
-            if inventory is None:
-                raise BusinessRuleException(f"Inventory not found for product: {reserva_dto.produto_id}")
-            
-            # Release reservation
-            inventory.liberar_reserva(reserva_dto.quantidade)
-            
-            # Save changes
-            inventory = await self.estoque_repository.update(inventory)
-            await self.db.commit()
-            
-            logger.info(
-                "Reservation released",
-                product_id=str(reserva_dto.produto_id),
-                quantity=reserva_dto.quantidade,
-                total_reserved=inventory.quantidade_reservada
-            )
-            
-            return self._entity_to_response_dto(inventory)
-            
-        except Exception as e:
-            logger.error("Release reservation failed", product_id=str(reserva_dto.produto_id), error=str(e))
-            await self.db.rollback()
-            raise
-    
     async def get_low_stock_report(self) -> EstoqueBaixoDTO:
         """Get low stock report."""
         try:

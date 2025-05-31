@@ -104,20 +104,7 @@ class EstoqueProduto(Entity):
         
         self._quantidade_atual -= quantidade
         self._atualizado_em = datetime.utcnow()
-    
-    def reservar_estoque(self, quantidade: int) -> None:
-        """Reserve stock."""
-        if quantidade <= 0:
-            raise ValidationException("Quantity to reserve must be positive")
-        
-        if quantidade > self.quantidade_disponivel:
-            raise BusinessRuleException(
-                f"Insufficient available stock to reserve. Available: {self.quantidade_disponivel}, "
-                f"Requested: {quantidade}"
-            )
-        
-        self._quantidade_reservada += quantidade
-        self._atualizado_em = datetime.utcnow()
+
     
     def liberar_reserva(self, quantidade: int) -> None:
         """Release reserved stock."""

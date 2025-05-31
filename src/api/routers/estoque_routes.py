@@ -1,14 +1,14 @@
 # src/inventory/presentation/api/v1/estoque_routes.py
 """Inventory API routes."""
 
-from typing import List
+from typing import Annotated, List
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
-from src.api.dependencies import get_db
+from src.api.dependencies import get_db, require_permission
 from src.estoque.application.services.estoque_application_service import EstoqueApplicationService
 from src.estoque.application.dto.estoque_dto import (
     EstoqueCreateDTO,
@@ -21,12 +21,14 @@ from src.estoque.application.dto.estoque_dto import (
     EstoqueBaixoDTO,
     EstoqueZeradoDTO
 )
+from src.identidade.domain.entities.usuario import Usuario
 
 router = APIRouter(prefix="/api/v1/inventory")
 
 
 @router.post("/", response_model=EstoqueResponseDTO, status_code=status.HTTP_201_CREATED)
 async def create_inventory(
+    _: Annotated[Usuario, Depends(require_permission("estoque:write"))],
     create_dto: EstoqueCreateDTO,
     db: AsyncSession = Depends(get_db)
 ):
@@ -37,6 +39,7 @@ async def create_inventory(
 
 @router.get("/product/{produto_id}", response_model=EstoqueResponseDTO)
 async def get_inventory_by_product(
+    _: Annotated[Usuario, Depends(require_permission("estoque:write"))],
     produto_id: UUID,
     db: AsyncSession = Depends(get_db)
 ):
@@ -55,6 +58,7 @@ async def get_inventory_by_product(
 
 @router.get("/", response_model=EstoqueListResponseDTO)
 async def list_inventory(
+    _: Annotated[Usuario, Depends(require_permission("estoque:write"))],
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
     db: AsyncSession = Depends(get_db)
@@ -66,6 +70,7 @@ async def list_inventory(
 
 @router.post("/add-stock", response_model=EstoqueResponseDTO)
 async def add_stock(
+    _: Annotated[Usuario, Depends(require_permission("estoque:write"))],
     movimento_dto: EstoqueMovimentacaoDTO,
     db: AsyncSession = Depends(get_db)
 ):
@@ -76,6 +81,7 @@ async def add_stock(
 
 @router.post("/remove-stock", response_model=EstoqueResponseDTO)
 async def remove_stock(
+    _: Annotated[Usuario, Depends(require_permission("estoque:write"))],
     movimento_dto: EstoqueMovimentacaoDTO,
     db: AsyncSession = Depends(get_db)
 ):
@@ -86,6 +92,7 @@ async def remove_stock(
 
 @router.post("/adjust-stock", response_model=EstoqueResponseDTO)
 async def adjust_stock(
+    _: Annotated[Usuario, Depends(require_permission("estoque:write"))],
     ajuste_dto: EstoqueAjusteDTO,
     db: AsyncSession = Depends(get_db)
 ):
@@ -94,28 +101,9 @@ async def adjust_stock(
     return await service.adjust_stock(ajuste_dto)
 
 
-@router.post("/reserve", response_model=EstoqueResponseDTO)
-async def reserve_stock(
-    reserva_dto: EstoqueReservaDTO,
-    db: AsyncSession = Depends(get_db)
-):
-    """Reserve stock."""
-    service = EstoqueApplicationService(db)
-    return await service.reserve_stock(reserva_dto)
-
-
-@router.post("/release-reservation", response_model=EstoqueResponseDTO)
-async def release_reservation(
-    reserva_dto: EstoqueReservaDTO,
-    db: AsyncSession = Depends(get_db)
-):
-    """Release reserved stock."""
-    service = EstoqueApplicationService(db)
-    return await service.release_reservation(reserva_dto)
-
-
 @router.get("/reports/low-stock", response_model=EstoqueBaixoDTO)
 async def get_low_stock_report(
+    _: Annotated[Usuario, Depends(require_permission("estoque:write"))],
     db: AsyncSession = Depends(get_db)
 ):
     """Get low stock report."""
@@ -125,6 +113,7 @@ async def get_low_stock_report(
 
 @router.get("/reports/out-of-stock", response_model=EstoqueZeradoDTO)
 async def get_out_of_stock_report(
+    _: Annotated[Usuario, Depends(require_permission("estoque:write"))],
     db: AsyncSession = Depends(get_db)
 ):
     """Get out of stock report."""

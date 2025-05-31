@@ -76,7 +76,7 @@ async def get_current_active_user(
     current_user: Usuario = Depends(get_current_user),
 ) -> Usuario:
     """Get current active user."""
-    import ipdb; ipdb.set_trace()
+
     if not current_user.ativo:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -92,7 +92,7 @@ def require_permission(permission: str):
         current_user: Usuario = Depends(get_current_active_user)
     ) -> Usuario:
         """Check if user has required permission."""
-        import ipdb; ipdb.set_trace()
+
         # Check if user has the required permission
         user_permissions = [p.to_string() for p in current_user.permissoes]
         
