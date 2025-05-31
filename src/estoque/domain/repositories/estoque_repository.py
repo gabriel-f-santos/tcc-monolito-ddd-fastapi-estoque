@@ -6,7 +6,7 @@ from typing import Optional, List
 from uuid import UUID
 
 from src.shared.infrastructure.repositories.base import BaseRepository
-from src.inventory.domain.entities.estoque_produto import EstoqueProduto
+from src.estoque.domain.entities.estoque_produto import EstoqueProduto
 
 
 class EstoqueRepository(BaseRepository[EstoqueProduto]):

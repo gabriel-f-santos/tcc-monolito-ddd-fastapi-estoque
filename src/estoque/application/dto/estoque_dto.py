@@ -7,6 +7,7 @@ from uuid import UUID
 
 from pydantic import Field
 
+from src.estoque.application.dto.produto_dto import ProdutoResponseDTO
 from src.shared.application.dto.base import BaseDTO, CreateDTO, UpdateDTO, ResponseDTO
 
 

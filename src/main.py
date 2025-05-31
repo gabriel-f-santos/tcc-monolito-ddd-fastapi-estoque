@@ -11,7 +11,7 @@ from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
 
 from src.api.middleware import LoggingMiddleware, PrometheusMiddleware
-from src.api.routers import auth, usuarios, produtos, estoque, movimentacoes, relatorios, health
+from src.api.routers import auth_routes, health_routes, movimentacoes_routes, produtos_routes, relatorios_routes, estoque_routes, usuarios_routes
 from src.config import get_settings
 from src.shared.infrastructure.database.connection import init_db, close_db
 from src.shared.infrastructure.logging.setup import setup_logging
@@ -86,43 +86,43 @@ def create_app() -> FastAPI:
     
     # Routers
     app.include_router(
-        health.router,
+        health_routes.router,
         prefix=f"{settings.api_v1_str}/health",
         tags=["Health"]
     )
     
     app.include_router(
-        auth.router,
+        auth_routes.router,
         prefix=f"{settings.api_v1_str}/auth",
         tags=["Authentication"]
     )
     
     app.include_router(
-        usuarios.router,
+        usuarios_routes.router,
         prefix=f"{settings.api_v1_str}/usuarios",
         tags=["Usuários"]
     )
     
     app.include_router(
-        produtos.router,
+        produtos_routes.router,
         prefix=f"{settings.api_v1_str}/produtos",
         tags=["Produtos"]
     )
     
     app.include_router(
-        estoque.router,
+        estoque_routes.router,
         prefix=f"{settings.api_v1_str}/estoque",
         tags=["Estoque"]
     )
     
     app.include_router(
-        movimentacoes.router,
+        movimentacoes_routes.router,
         prefix=f"{settings.api_v1_str}/movimentacoes",
         tags=["Movimentações"]
     )
     
     app.include_router(
-        relatorios.router,
+        relatorios_routes.router,
         prefix=f"{settings.api_v1_str}/relatorios",
         tags=["Relatórios"]
     )

@@ -5,8 +5,8 @@ from typing import List, Optional
 from uuid import UUID
 
 from src.shared.domain.exceptions.base import BusinessRuleException
-from src.inventory.domain.entities.produto import Produto
-from src.inventory.domain.entities.estoque_produto import EstoqueProduto
+from src.estoque.domain.entities.produto import Produto
+from src.estoque.domain.entities.estoque_produto import EstoqueProduto
 
 
 class EstoqueService:

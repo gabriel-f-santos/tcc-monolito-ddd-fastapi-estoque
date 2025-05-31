@@ -9,13 +9,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.shared.application.services.base import BaseApplicationService
 from src.shared.domain.exceptions.base import ValidationException, BusinessRuleException
-from src.inventory.domain.entities.estoque_produto import EstoqueProduto
-from src.inventory.domain.entities.produto import Produto
-from src.inventory.domain.services.estoque_service import EstoqueService
-from src.inventory.domain.value_objects.unidade_medida import UnidadeMedida
-from src.inventory.infrastructure.repositories.sqlalchemy_estoque_repository import SqlAlchemyEstoqueRepository
-from src.inventory.infrastructure.repositories.sqlalchemy_produto_repository import SqlAlchemyProdutoRepository
-from src.inventory.application.dto.estoque_dto import (
+from src.estoque.domain.entities.estoque_produto import EstoqueProduto
+from src.estoque.domain.entities.produto import Produto
+from src.estoque.domain.services.estoque_service import EstoqueService
+from src.estoque.domain.value_objects.unidade_medida import UnidadeMedida
+from src.estoque.infrastructure.repositories.sqlalchemy_estoque_repository import SqlAlchemyEstoqueRepository
+from src.estoque.infrastructure.repositories.sqlalchemy_produto_repository import SqlAlchemyProdutoRepository
+from src.estoque.application.dto.estoque_dto import (
     EstoqueCreateDTO,
     EstoqueUpdateDTO,
     EstoqueMovimentacaoDTO,
@@ -27,7 +27,7 @@ from src.inventory.application.dto.estoque_dto import (
     EstoqueBaixoDTO,
     EstoqueZeradoDTO
 )
-from src.inventory.application.dto.produto_dto import ProdutoResponseDTO
+from src.estoque.application.dto.produto_dto import ProdutoResponseDTO
 
 logger = structlog.get_logger()
 
