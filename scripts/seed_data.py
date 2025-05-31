@@ -14,8 +14,8 @@ sys.path.append(str(Path(__file__).parent.parent))
 from src.config import get_settings
 from src.shared.infrastructure.database.connection import init_db, get_async_session
 from src.shared.infrastructure.logging.setup import setup_logging
-from src.identity.application.services.usuario_application_service import UsuarioApplicationService
-from src.identity.application.dto.usuario_dto import UsuarioCreateDTO
+from src.identidade.application.services.usuario_application_service import UsuarioApplicationService
+from src.identidade.application.dto.usuario_dto import UsuarioCreateDTO
 
 logger = structlog.get_logger()
 settings = get_settings()

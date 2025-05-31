@@ -6,8 +6,8 @@ from typing import Optional, List
 from uuid import UUID
 
 from src.shared.infrastructure.repositories.base import BaseRepository
-from src.identity.domain.entities.usuario import Usuario
-from src.identity.domain.value_objects.email import Email
+from src.identidade.domain.entities.usuario import Usuario
+from src.identidade.domain.value_objects.email import Email
 
 
 class UsuarioRepository(BaseRepository[Usuario]):

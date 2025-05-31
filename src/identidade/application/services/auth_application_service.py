@@ -11,10 +11,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.config import get_settings
 from src.shared.application.services.base import BaseApplicationService
 from src.shared.domain.exceptions.base import ValidationException, BusinessRuleException
-from src.identity.domain.entities.usuario import Usuario
-from src.identity.domain.value_objects.email import Email
-from src.identity.infrastructure.repositories.sqlalchemy_usuario_repository import SqlAlchemyUsuarioRepository
-from src.identity.application.dto.auth_dto import LoginDTO, TokenResponseDTO, ChangePasswordDTO
+from src.identidade.domain.entities.usuario import Usuario
+from src.identidade.domain.value_objects.email import Email
+from src.identidade.infrastructure.repositories.sqlalchemy_usuario_repository import SqlAlchemyUsuarioRepository
+from src.identidade.application.dto.auth_dto import LoginDTO, TokenResponseDTO, ChangePasswordDTO
 
 logger = structlog.get_logger()
 settings = get_settings()

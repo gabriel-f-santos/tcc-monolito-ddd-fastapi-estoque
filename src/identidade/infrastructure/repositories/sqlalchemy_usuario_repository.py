@@ -8,11 +8,11 @@ import structlog
 from sqlalchemy import and_, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.identity.domain.entities.usuario import Usuario
-from src.identity.domain.repositories.usuario_repository import UsuarioRepository
-from src.identity.domain.value_objects.email import Email
-from src.identity.domain.value_objects.permissao import Permissao
-from src.identity.infrastructure.models.usuario_model import UsuarioModel
+from src.identidade.domain.entities.usuario import Usuario
+from src.identidade.domain.repositories.usuario_repository import UsuarioRepository
+from src.identidade.domain.value_objects.email import Email
+from src.identidade.domain.value_objects.permissao import Permissao
+from src.identidade.infrastructure.models.usuario_model import UsuarioModel
 
 logger = structlog.get_logger()
 

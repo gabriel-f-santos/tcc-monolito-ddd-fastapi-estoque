@@ -9,11 +9,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.shared.application.services.base import BaseApplicationService
 from src.shared.domain.exceptions.base import ValidationException, BusinessRuleException
-from src.identity.domain.entities.usuario import Usuario
-from src.identity.domain.value_objects.email import Email
-from src.identity.domain.value_objects.permissao import Permissao
-from src.identity.infrastructure.repositories.sqlalchemy_usuario_repository import SqlAlchemyUsuarioRepository
-from src.identity.application.dto.usuario_dto import (
+from src.identidade.domain.entities.usuario import Usuario
+from src.identidade.domain.value_objects.email import Email
+from src.identidade.domain.value_objects.permissao import Permissao
+from src.identidade.infrastructure.repositories.sqlalchemy_usuario_repository import SqlAlchemyUsuarioRepository
+from src.identidade.application.dto.usuario_dto import (
     UsuarioCreateDTO, 
     UsuarioUpdateDTO, 
     UsuarioResponseDTO,

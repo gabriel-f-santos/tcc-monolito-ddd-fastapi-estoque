@@ -121,12 +121,6 @@ def create_app() -> FastAPI:
         tags=["Movimentações"]
     )
     
-    app.include_router(
-        relatorios_routes.router,
-        prefix=f"{settings.api_v1_str}/relatorios",
-        tags=["Relatórios"]
-    )
-    
     # Prometheus metrics endpoint
     if settings.prometheus_enabled:
         @app.get("/metrics")

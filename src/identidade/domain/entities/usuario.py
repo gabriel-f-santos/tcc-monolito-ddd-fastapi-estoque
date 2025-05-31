@@ -9,8 +9,8 @@ from passlib.context import CryptContext
 
 from src.shared.domain.entities.base import AggregateRoot
 from src.shared.domain.exceptions.base import ValidationException, BusinessRuleException
-from src.identity.domain.value_objects.email import Email
-from src.identity.domain.value_objects.permissao import Permissao
+from src.identidade.domain.value_objects.email import Email
+from src.identidade.domain.value_objects.permissao import Permissao
 
 # Password hashing context
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

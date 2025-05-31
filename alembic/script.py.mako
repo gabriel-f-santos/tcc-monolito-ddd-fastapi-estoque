@@ -1,4 +1,3 @@
-# alembic/script.py.mako
 """${message}
 
 Revision ID: ${up_revision}
@@ -20,10 +19,10 @@ depends_on: Union[str, Sequence[str], None] = ${repr(depends_on)}
 
 
 def upgrade() -> None:
-    """Upgrade database schema."""
+    """Upgrade schema."""
     ${upgrades if upgrades else "pass"}
 
 
 def downgrade() -> None:
-    """Downgrade database schema."""
+    """Downgrade schema."""
     ${downgrades if downgrades else "pass"}

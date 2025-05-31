@@ -9,14 +9,14 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.dependencies import get_db, require_permission
-from src.identity.application.services.usuario_application_service import UsuarioApplicationService
-from src.identity.application.dto.usuario_dto import (
+from src.identidade.application.services.usuario_application_service import UsuarioApplicationService
+from src.identidade.application.dto.usuario_dto import (
     UsuarioCreateDTO,
     UsuarioUpdateDTO,
     UsuarioResponseDTO,
     UsuarioListResponseDTO
 )
-from src.identity.domain.entities.usuario import Usuario
+from src.identidade.domain.entities.usuario import Usuario
 from src.shared.domain.exceptions.base import ValidationException, BusinessRuleException
 
 logger = structlog.get_logger()
@@ -29,6 +29,7 @@ async def create_user(
     db: Annotated[AsyncSession, Depends(get_db)],
     _: Annotated[Usuario, Depends(require_permission("usuarios:write"))]
 ):
+    import ipdb; ipdb.set_trace()
     """Create new user."""
     try:
         user_service = UsuarioApplicationService(db)

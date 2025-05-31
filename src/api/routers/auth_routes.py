@@ -8,9 +8,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.dependencies import get_db, get_current_active_user
-from src.identity.application.services.auth_application_service import AuthApplicationService
-from src.identity.application.dto.auth_dto import LoginDTO, TokenResponseDTO, ChangePasswordDTO
-from src.identity.domain.entities.usuario import Usuario
+from src.identidade.application.services.auth_application_service import AuthApplicationService
+from src.identidade.application.dto.auth_dto import LoginDTO, TokenResponseDTO, ChangePasswordDTO
+from src.identidade.domain.entities.usuario import Usuario
 from src.shared.domain.exceptions.base import ValidationException, BusinessRuleException
 
 logger = structlog.get_logger()
