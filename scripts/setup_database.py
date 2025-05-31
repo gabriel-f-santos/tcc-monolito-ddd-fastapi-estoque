@@ -21,61 +21,6 @@ logger = structlog.get_logger()
 settings = get_settings()
 
 
-async def create_database_if_not_exists():
-    """Create database if it doesn't exist."""
-    # Parse database URL
-    db_url = settings.database_url
-    if "://" in db_url:
-        # postgresql://user:password@host:port/database
-        parts = db_url.split("://")[1]
-        auth_host, db_name = parts.rsplit("/", 1)
-        if "@" in auth_host:
-            auth, host_port = auth_host.split("@")
-            username, password = auth.split(":")
-        else:
-            host_port = auth_host
-            username = password = None
-        
-        if ":" in host_port:
-            host, port = host_port.split(":")
-            port = int(port)
-        else:
-            host = host_port
-            port = 5432
-    else:
-        logger.error("Invalid database URL format")
-        return False
-    
-    try:
-        # Connect to postgres database to create our database
-        conn = await asyncpg.connect(
-            host=host,
-            port=port,
-            user=username,
-            password=password,
-            database="postgres"
-        )
-        
-        # Check if database exists
-        exists = await conn.fetchval(
-            "SELECT 1 FROM pg_database WHERE datname = $1", db_name
-        )
-        
-        if not exists:
-            logger.info(f"Creating database: {db_name}")
-            await conn.execute(f'CREATE DATABASE "{db_name}"')
-            logger.info(f"Database {db_name} created successfully")
-        else:
-            logger.info(f"Database {db_name} already exists")
-        
-        await conn.close()
-        return True
-        
-    except Exception as e:
-        logger.error("Failed to create database", error=str(e))
-        return False
-
-
 async def create_schemas():
     """Create database schemas."""
     try:
@@ -84,7 +29,7 @@ async def create_schemas():
         # Use sync session for schema creation
         with get_sync_session() as session:
             # Create schemas
-            schemas = ["identity", "inventory", "warehouse", "reporting"]
+            schemas = ["identity", "inventory", "reporting"]
             
             for schema in schemas:
                 try:
@@ -108,11 +53,6 @@ async def main():
     """Main setup function."""
     setup_logging("INFO", "text")
     logger.info("Starting database setup")
-    
-    # Create database
-    if not await create_database_if_not_exists():
-        logger.error("Failed to create database")
-        sys.exit(1)
     
     # Create schemas
     if not await create_schemas():
