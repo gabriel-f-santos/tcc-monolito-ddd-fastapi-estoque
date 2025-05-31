@@ -25,8 +25,7 @@ O sistema foi projetado seguindo os princípios do Domain-Driven Design (DDD) co
 
 1. **Identity & Access Management** - Autenticação e autorização
 2. **Inventory Management** - Gestão de produtos e estoque
-3. **Warehouse Operations** - Movimentações de estoque
-4. **Reporting & Analytics** - Relatórios e análises
+3. **Reporting & Analytics** - Relatórios e análises
 
 ## 🛠️ Setup do Projeto
 
@@ -39,7 +38,7 @@ O sistema foi projetado seguindo os princípios do Domain-Driven Design (DDD) co
 
 1. **Clone o repositório:**
 ```bash
-git clone https://github.com/seu-usuario/inventory-system.git
+git clone https://github.com/gabriel-f-santos/inventory-system.git
 cd inventory-system
 ```
 
