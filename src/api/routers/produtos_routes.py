@@ -17,7 +17,7 @@ from src.estoque.application.dto.produto_dto import (
     ProdutoSearchDTO
 )
 
-router = APIRouter(prefix="/api/v1/products", tags=["products"])
+router = APIRouter(prefix="/api/v1/products")
 
 
 @router.post("/", response_model=ProdutoResponseDTO, status_code=status.HTTP_201_CREATED)

@@ -22,7 +22,7 @@ from src.estoque.application.dto.estoque_dto import (
     EstoqueZeradoDTO
 )
 
-router = APIRouter(prefix="/api/v1/inventory", tags=["inventory"])
+router = APIRouter(prefix="/api/v1/inventory")
 
 
 @router.post("/", response_model=EstoqueResponseDTO, status_code=status.HTTP_201_CREATED)
