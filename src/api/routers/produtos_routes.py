@@ -8,8 +8,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.dependencies import get_db, require_permission
-from src.estoque.application.services.produto_application_service import ProdutoApplicationService
-from src.estoque.application.dto.produto_dto import (
+from src.produto.application.services.produto_application_service import ProdutoApplicationService
+from src.produto.application.dto.produto_dto import (
     ProdutoCreateDTO,
     ProdutoUpdateDTO,
     ProdutoResponseDTO,

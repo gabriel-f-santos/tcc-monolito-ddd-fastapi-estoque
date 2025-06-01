@@ -8,11 +8,11 @@ import structlog
 from sqlalchemy import and_, func, select, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.estoque.domain.entities.produto import Produto
-from src.estoque.domain.repositories.produto_repository import ProdutoRepository
-from src.estoque.domain.value_objects.sku import SKU
-from src.estoque.domain.value_objects.unidade_medida import UnidadeMedida
-from src.estoque.infrastructure.models.produto_model import ProdutoModel
+from src.produto.domain.entities.produto import Produto
+from src.produto.domain.repositories.produto_repository import ProdutoRepository
+from src.produto.domain.value_objects.sku import SKU
+from src.produto.domain.value_objects.unidade_medida import UnidadeMedida
+from src.produto.infrastructure.models.produto_model import ProdutoModel
 
 logger = structlog.get_logger()
 

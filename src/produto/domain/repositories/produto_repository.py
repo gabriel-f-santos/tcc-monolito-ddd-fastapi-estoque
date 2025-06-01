@@ -6,8 +6,8 @@ from typing import Optional, List
 from uuid import UUID
 
 from src.shared.infrastructure.repositories.base import BaseRepository
-from src.estoque.domain.entities.produto import Produto
-from src.estoque.domain.value_objects.sku import SKU
+from src.produto.domain.entities.produto import Produto
+from src.produto.domain.value_objects.sku import SKU
 
 
 class ProdutoRepository(BaseRepository[Produto]):

@@ -6,8 +6,8 @@ from uuid import UUID
 
 from src.shared.domain.entities.base import AggregateRoot
 from src.shared.domain.exceptions.base import ValidationException
-from src.estoque.domain.value_objects.sku import SKU
-from src.estoque.domain.value_objects.unidade_medida import UnidadeMedida
+from src.produto.domain.value_objects.sku import SKU
+from src.produto.domain.value_objects.unidade_medida import UnidadeMedida
 
 
 class Produto(AggregateRoot):

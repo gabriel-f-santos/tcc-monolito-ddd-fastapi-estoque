@@ -9,11 +9,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.shared.application.services.base import BaseApplicationService
 from src.shared.domain.exceptions.base import ValidationException, BusinessRuleException
-from src.estoque.domain.entities.produto import Produto
-from src.estoque.domain.value_objects.sku import SKU
-from src.estoque.domain.value_objects.unidade_medida import UnidadeMedida
-from src.estoque.infrastructure.repositories.sqlalchemy_produto_repository import SqlAlchemyProdutoRepository
-from src.estoque.application.dto.produto_dto import (
+from src.produto.domain.entities.produto import Produto
+from src.produto.domain.value_objects.sku import SKU
+from src.produto.domain.value_objects.unidade_medida import UnidadeMedida
+from src.produto.infrastructure.repositories.sqlalchemy_produto_repository import SqlAlchemyProdutoRepository
+from src.produto.application.dto.produto_dto import (
     ProdutoCreateDTO,
     ProdutoUpdateDTO,
     ProdutoResponseDTO,
