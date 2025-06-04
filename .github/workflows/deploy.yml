@@ -69,7 +69,6 @@ jobs:
           (github.event_name == 'workflow_dispatch' && github.event.inputs.stage == 'push') 
         }}
 
-      # --- 6) DEPLOY NA EC2 VIA SSH ---
       - name: Deploy to EC2
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
