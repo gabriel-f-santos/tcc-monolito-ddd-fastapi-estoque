@@ -51,8 +51,7 @@ jobs:
             -t fastapi-app .
           docker tag fastapi-app:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fastapi-app:latest
         # Executa se for push normal, ou se for dispatch com stage == build
-        if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.stage == 'build') 
-        }}
+        if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.stage == 'build') }}
 
       # --- 5) PUSH DA IMAGEM PARA O ECR ---
       - name: Push Docker Image to ECR
