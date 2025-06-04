@@ -43,65 +43,65 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.stage != 'deploy' }}
 
-      - name: Build Docker Image
-        run: |
-          docker build \
-            --build-arg DATABASE_URL="${{ secrets.DATABASE_URL }}" \
-            --build-arg SECRET_KEY="${{ secrets.SECRET_KEY }}" \
-            -t fastapi-app .
-          docker tag fastapi-app:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fastapi-app:latest
-        # Executa se for push normal, ou se for dispatch com stage == build
-        if: ${{ 
-          github.event_name == 'push' || 
-          (github.event_name == 'workflow_dispatch' && github.event.inputs.stage == 'build') 
-        }}
+      # - name: Build Docker Image
+      #   run: |
+      #     docker build \
+      #       --build-arg DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+      #       --build-arg SECRET_KEY="${{ secrets.SECRET_KEY }}" \
+      #       -t fastapi-app .
+      #     docker tag fastapi-app:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fastapi-app:latest
+      #   # Executa se for push normal, ou se for dispatch com stage == build
+      #   if: ${{ 
+      #     github.event_name == 'push' || 
+      #     (github.event_name == 'workflow_dispatch' && github.event.inputs.stage == 'build') 
+      #   }}
 
-      # --- 5) PUSH DA IMAGEM PARA O ECR ---
-      - name: Push Docker Image to ECR
-        run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fastapi-app:latest
-        # Executa se for push normal, ou se for dispatch com stage == push
-        if: ${{ 
-          github.event_name == 'push' || 
-          (github.event_name == 'workflow_dispatch' && github.event.inputs.stage == 'push') 
-        }}
+      # # --- 5) PUSH DA IMAGEM PARA O ECR ---
+      # - name: Push Docker Image to ECR
+      #   run: |
+      #     docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fastapi-app:latest
+      #   # Executa se for push normal, ou se for dispatch com stage == push
+      #   if: ${{ 
+      #     github.event_name == 'push' || 
+      #     (github.event_name == 'workflow_dispatch' && github.event.inputs.stage == 'push') 
+      #   }}
 
-      - name: Deploy to EC2
-        env:
-          EC2_HOST: ${{ secrets.EC2_HOST }}
-          ECR_REPOSITORY_URI: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fastapi-app
-        run: |
-          # Configura chave SSH
-          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > id_rsa
-          chmod 600 id_rsa
+      # - name: Deploy to EC2
+      #   env:
+      #     EC2_HOST: ${{ secrets.EC2_HOST }}
+      #     ECR_REPOSITORY_URI: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fastapi-app
+      #   run: |
+      #     # Configura chave SSH
+      #     echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > id_rsa
+      #     chmod 600 id_rsa
 
-          # Remove container antigo (se existir)
-          ssh -o StrictHostKeyChecking=no -i id_rsa ubuntu@$EC2_HOST "docker stop fastapi || true && docker rm fastapi || true"
+      #     # Remove container antigo (se existir)
+      #     ssh -o StrictHostKeyChecking=no -i id_rsa ubuntu@$EC2_HOST "docker stop fastapi || true && docker rm fastapi || true"
 
-          # Login no ECR na EC2
-          ssh -i id_rsa ubuntu@$EC2_HOST "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com"
+      #     # Login no ECR na EC2
+      #     ssh -i id_rsa ubuntu@$EC2_HOST "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com"
 
-          # Pull da imagem nova
-          ssh -i id_rsa ubuntu@$EC2_HOST "docker pull ${ECR_REPOSITORY_URI}:latest"
+      #     # Pull da imagem nova
+      #     ssh -i id_rsa ubuntu@$EC2_HOST "docker pull ${ECR_REPOSITORY_URI}:latest"
 
-          # Rodar o novo container
-          ssh -i id_rsa ubuntu@$EC2_HOST \
-            "docker run -d --name fastapi \
-            --restart=always -p 127.0.0.1:8080:8080 \
-            --log-driver=awslogs \
-            --log-opt awslogs-region=us-east-1 \
-            --log-opt awslogs-group=fastapi-server-logs \
-            --log-opt awslogs-stream=fastapi-server-stream \
-            --log-opt awslogs-create-group=true \
-            ${ECR_REPOSITORY_URI}:latest"
+      #     # Rodar o novo container
+      #     ssh -i id_rsa ubuntu@$EC2_HOST \
+      #       "docker run -d --name fastapi \
+      #       --restart=always -p 127.0.0.1:8080:8080 \
+      #       --log-driver=awslogs \
+      #       --log-opt awslogs-region=us-east-1 \
+      #       --log-opt awslogs-group=fastapi-server-logs \
+      #       --log-opt awslogs-stream=fastapi-server-stream \
+      #       --log-opt awslogs-create-group=true \
+      #       ${ECR_REPOSITORY_URI}:latest"
 
-          # Limpar imagens antigas
-          ssh -i id_rsa ubuntu@$EC2_HOST "docker image prune -a -f"
+      #     # Limpar imagens antigas
+      #     ssh -i id_rsa ubuntu@$EC2_HOST "docker image prune -a -f"
 
-          # Limpa chave SSH
-          rm -f id_rsa
-        # Executa se for push normal, ou se for dispatch com stage == deploy
-        if: ${{ 
-          github.event_name == 'push' || 
-          (github.event_name == 'workflow_dispatch' && github.event.inputs.stage == 'deploy') 
-        }}
+      #     # Limpa chave SSH
+      #     rm -f id_rsa
+      #   # Executa se for push normal, ou se for dispatch com stage == deploy
+      #   if: ${{ 
+      #     github.event_name == 'push' || 
+      #     (github.event_name == 'workflow_dispatch' && github.event.inputs.stage == 'deploy') 
+      #   }}
