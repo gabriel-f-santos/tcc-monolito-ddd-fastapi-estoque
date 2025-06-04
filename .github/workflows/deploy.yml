@@ -1,32 +1,68 @@
 name: Deploy FastAPI to EC2
 
+# 1) Permitir disparar tanto no push na master quanto manualmente
 on:
   push:
     branches:
       - master
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: 'Qual estágio você quer executar?'
+        required: true
+        default: build
+        type: choice
+        options:
+          - build
+          - push
+          - deploy
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout do código
+      # --- 1) CHECKOUT DO CÓDIGO ---
       - name: Checkout repository
         uses: actions/checkout@v2
+        # Se for workflow_dispatch E stage != build, pula este step
+        if: >-
+          ${{ 
+            github.event_name == 'workflow_dispatch' && 
+            github.event.inputs.stage != 'build' 
+              ? false 
+              : true 
+          }}
 
-      # Configura as credenciais AWS
+      # --- 2) CONFIGURAR CREDENCIAIS AWS ---
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
+        # Se for workflow_dispatch E stage == deploy (pulando build e push), não precisamos reconfigurar:
+        if: >-
+          ${{ 
+            github.event_name == 'workflow_dispatch' && 
+            github.event.inputs.stage == 'deploy' 
+              ? false 
+              : true 
+          }}
 
-      # Login no ECR
+      # --- 3) LOGIN NO ECR ---
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
+        # Mesma lógica: só roda se for push normal ou se for dispatch com stage == build ou push
+        if: >-
+          ${{ 
+            github.event_name == 'workflow_dispatch' && 
+            github.event.inputs.stage == 'deploy' 
+              ? false 
+              : true 
+          }}
 
-      # Build e tag da imagem Docker
+      # --- 4) BUILD E TAG DA IMAGEM DOCKER ---
       - name: Build Docker Image
         run: |
           docker build \
@@ -34,13 +70,25 @@ jobs:
             --build-arg SECRET_KEY="${{ secrets.SECRET_KEY }}" \
             -t fastapi-app .
           docker tag fastapi-app:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fastapi-app:latest
+        # Executa se for push normal ou, no workflow_dispatch, se inputs.stage for 'build'
+        if: >-
+          ${{ 
+            github.event_name == 'push' || 
+            (github.event_name == 'workflow_dispatch' && github.event.inputs.stage == 'build') 
+          }}
 
-      # Push da imagem para o ECR
+      # --- 5) PUSH DA IMAGEM PARA O ECR ---
       - name: Push Docker Image to ECR
         run: |
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fastapi-app:latest
+        # Executa se for push normal ou se for dispatch com stage == push
+        if: >-
+          ${{ 
+            github.event_name == 'push' || 
+            (github.event_name == 'workflow_dispatch' && github.event.inputs.stage == 'push') 
+          }}
 
-      # Deploy na EC2 via SSH
+      # --- 6) DEPLOY NA EC2 VIA SSH ---
       - name: Deploy to EC2
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
@@ -75,3 +123,10 @@ jobs:
 
           # Limpa chave SSH
           rm -f id_rsa
+        # Executa sempre no push normal.
+        # Se for dispatch, só executa quando inputs.stage == 'deploy'
+        if: >-
+          ${{ 
+            github.event_name == 'push' || 
+            (github.event_name == 'workflow_dispatch' && github.event.inputs.stage == 'deploy') 
+          }}
