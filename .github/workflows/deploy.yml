@@ -43,18 +43,18 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.stage != 'deploy' }}
 
-      # - name: Build Docker Image
-      #   run: |
-      #     docker build \
-      #       --build-arg DATABASE_URL="${{ secrets.DATABASE_URL }}" \
-      #       --build-arg SECRET_KEY="${{ secrets.SECRET_KEY }}" \
-      #       -t fastapi-app .
-      #     docker tag fastapi-app:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fastapi-app:latest
-      #   # Executa se for push normal, ou se for dispatch com stage == build
-      #   if: ${{ 
-      #     github.event_name == 'push' || 
-      #     (github.event_name == 'workflow_dispatch' && github.event.inputs.stage == 'build') 
-      #   }}
+      - name: Build Docker Image
+        run: |
+          docker build \
+            --build-arg DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+            --build-arg SECRET_KEY="${{ secrets.SECRET_KEY }}" \
+            -t fastapi-app .
+          docker tag fastapi-app:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fastapi-app:latest
+        # Executa se for push normal, ou se for dispatch com stage == build
+        if: ${{ 
+          github.event_name == 'push' || 
+          (github.event_name == 'workflow_dispatch' && github.event.inputs.stage == 'build') 
+        }}
 
       # # --- 5) PUSH DA IMAGEM PARA O ECR ---
       # - name: Push Docker Image to ECR
