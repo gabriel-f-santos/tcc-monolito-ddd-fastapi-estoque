@@ -41,9 +41,7 @@ jobs:
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
-
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.stage != 'deploy' }}
-
 
       - name: Build Docker Image
         run: |
