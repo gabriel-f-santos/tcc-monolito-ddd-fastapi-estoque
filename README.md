@@ -73,7 +73,7 @@ alembic upgrade head
 
 7. **Inicie a aplicação:**
 ```bash
-uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
+uvicorn src.main:app --reload --host 0.0.0.0 --port 8080
 ```
 
 ## 📊 Coleta de Dados para TCC
