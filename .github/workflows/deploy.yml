@@ -39,13 +39,12 @@ jobs:
         # Equivalente a: !(github.event_name == 'workflow_dispatch' && github.event.inputs.stage == 'deploy')
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.stage != 'deploy' }}
 
-      # --- 3) LOGIN NO ECR ---
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
-        # Mesma lógica do Configure AWS: só pula se for dispatch & stage == deploy
+
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.stage != 'deploy' }}
 
-      # --- 4) BUILD E TAG DA IMAGEM DOCKER ---
+
       - name: Build Docker Image
         run: |
           docker build \
