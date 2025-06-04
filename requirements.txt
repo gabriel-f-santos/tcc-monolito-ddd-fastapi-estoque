@@ -7,6 +7,7 @@ uvicorn[standard]
 sqlalchemy
 alembic
 psycopg2-binary
+asyncpg==0.30.0
 
 # Data Validation
 pydantic[email]
