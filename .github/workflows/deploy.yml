@@ -25,7 +25,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         # Se for workflow_dispatch e stage != build, pula este step.
-        # Equivalente a: !(github.event_name == 'workflow_dispatch' && github.event.inputs.stage != 'build')
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.stage == 'build' }}
 
       # --- 2) CONFIGURAR CREDENCIAIS AWS ---
@@ -36,19 +35,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
         # Se for workflow_dispatch e stage == deploy, pula este step.
-        # Equivalente a: !(github.event_name == 'workflow_dispatch' && github.event.inputs.stage == 'deploy')
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.stage != 'deploy' }}
 
+      # --- 3) LOGIN NO ECR ---
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
         if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.stage != 'deploy' }}
 
+      # --- 4) BUILD DA IMAGEM DOCKER (SEM ARGUMENTOS SENSÍVEIS) ---
       - name: Build Docker Image
         run: |
-          docker build \
-            --build-arg DATABASE_URL="${{ secrets.DATABASE_URL }}" \
-            --build-arg SECRET_KEY="${{ secrets.SECRET_KEY }}" \
-            -t fastapi-app .
+          docker build -t fastapi-app .
           docker tag fastapi-app:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fastapi-app:latest
         # Executa se for push normal, ou se for dispatch com stage == build
         if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.stage == 'build') }}
@@ -60,10 +57,13 @@ jobs:
         # Executa se for push normal, ou se for dispatch com stage == push
         if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.stage == 'push') }}
 
+      # --- 6) DEPLOY NA EC2 VIA SSH (PASSANDO DATABASE_URL E SECRET_KEY EM TEMPO DE EXECUÇÃO) ---
       - name: Deploy to EC2
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           ECR_REPOSITORY_URI: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/fastapi-app
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
         run: |
           # Configura chave SSH
           echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > id_rsa
@@ -78,10 +78,13 @@ jobs:
           # Pull da imagem nova
           ssh -i id_rsa ubuntu@$EC2_HOST "docker pull ${ECR_REPOSITORY_URI}:latest"
 
-          # Rodar o novo container
+          # Rodar o novo container, passando DATABASE_URL e SECRET_KEY em runtime
           ssh -i id_rsa ubuntu@$EC2_HOST \
             "docker run -d --name fastapi \
-            --restart=always -p 127.0.0.1:8080:8080 \
+            --restart=always \
+            -p 127.0.0.1:8080:8080 \
+            -e DATABASE_URL='${DATABASE_URL}' \
+            -e SECRET_KEY='${SECRET_KEY}' \
             --log-driver=awslogs \
             --log-opt awslogs-region=us-east-1 \
             --log-opt awslogs-group=fastapi-server-logs \
