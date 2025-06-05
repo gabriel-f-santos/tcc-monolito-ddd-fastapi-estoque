@@ -23,7 +23,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY src/ ./src
 COPY scripts/ ./scripts
 COPY alembic/ ./alembic
-COPY .alembic.ini .
+COPY alembic.ini .
 COPY .env.example .env
 
 # Copiar e marcar o entrypoint como executável ANTES de mudar para usuário não-root
