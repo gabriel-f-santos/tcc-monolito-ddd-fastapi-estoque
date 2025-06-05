@@ -23,6 +23,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiar apenas o código-fonte da aplicação (sem testes, migrations ou scripts auxiliares)
 COPY src/ ./src
+COPY scripts/ ./scripts
+COPY alembic/ ./alembic
+COPY .alembic.ini .
+# Copiar arquivos de configuração necessários
+COPY .env.example .env
+
 
 # (Opcional) Se você precisar rodar migrações no container, copie também o arquivo de configuração do Alembic:
 # COPY alembic.ini .
