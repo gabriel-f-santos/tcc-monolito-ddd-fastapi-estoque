@@ -23,7 +23,7 @@ from src.estoque.application.dto.estoque_dto import (
 )
 from src.identidade.domain.entities.usuario import Usuario
 
-router = APIRouter(prefix="/api/v1/inventory")
+router = APIRouter()
 
 
 @router.post("/", response_model=EstoqueResponseDTO, status_code=status.HTTP_201_CREATED)

@@ -21,7 +21,7 @@ from fastapi import Depends
 from src.identidade.domain.entities.usuario import Usuario
 from src.shared.domain.exceptions.base import ValidationException, BusinessRuleException
 
-router = APIRouter(prefix="/api/v1/products")
+router = APIRouter()
 
 
 @router.post("/", response_model=ProdutoResponseDTO, status_code=status.HTTP_201_CREATED)
