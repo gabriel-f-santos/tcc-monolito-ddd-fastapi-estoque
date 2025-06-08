@@ -15,7 +15,11 @@ class UsuarioCreateDTO(CreateDTO):
     email: EmailStr
     nome: str = Field(..., min_length=1, max_length=255)
     senha: str = Field(..., min_length=6, max_length=100)
-    permissoes: List[str] = Field(default_factory=list)
+    permissoes: List[str] = Field(
+        default_factory=list,
+        example=["usuarios:read", "produtos:write", "estoque:read"],
+        description="Lista de permissões no formato 'recurso:acao'"
+    )
     ativo: bool = True
 
 
