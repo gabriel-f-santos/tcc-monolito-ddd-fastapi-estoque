@@ -23,7 +23,7 @@ logger = structlog.get_logger()
 router = APIRouter()
 
 
-@router.post("/", response_model=UsuarioResponseDTO, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=UsuarioResponseDTO, status_code=status.HTTP_201_CREATED)
 async def create_user(
     create_dto: UsuarioCreateDTO,
     db: Annotated[AsyncSession, Depends(get_db)],
@@ -55,7 +55,7 @@ async def create_user(
         )
 
 
-@router.get("/", response_model=UsuarioListResponseDTO)
+@router.get("", response_model=UsuarioListResponseDTO)
 async def get_users(
     db: Annotated[AsyncSession, Depends(get_db)],
     _ : Annotated[Usuario, Depends(require_permission("usuarios:read"))],

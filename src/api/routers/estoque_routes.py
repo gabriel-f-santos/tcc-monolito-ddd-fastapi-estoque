@@ -26,7 +26,7 @@ from src.identidade.domain.entities.usuario import Usuario
 router = APIRouter()
 
 
-@router.post("/", response_model=EstoqueResponseDTO, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=EstoqueResponseDTO, status_code=status.HTTP_201_CREATED)
 async def create_inventory(
     _: Annotated[Usuario, Depends(require_permission("estoque:write"))],
     create_dto: EstoqueCreateDTO,
@@ -56,7 +56,7 @@ async def get_inventory_by_product(
     return inventory
 
 
-@router.get("/", response_model=EstoqueListResponseDTO)
+@router.get("", response_model=EstoqueListResponseDTO)
 async def list_inventory(
     _: Annotated[Usuario, Depends(require_permission("estoque:write"))],
     skip: int = Query(0, ge=0),

@@ -24,7 +24,7 @@ from src.shared.domain.exceptions.base import ValidationException, BusinessRuleE
 router = APIRouter()
 
 
-@router.post("/", response_model=ProdutoResponseDTO, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=ProdutoResponseDTO, status_code=status.HTTP_201_CREATED)
 async def create_product(
     create_dto: ProdutoCreateDTO,
     _: Annotated[Usuario, Depends(require_permission("estoque:write"))],
@@ -73,7 +73,7 @@ async def get_product_by_sku(
     return product
 
 
-@router.get("/", response_model=ProdutoListResponseDTO)
+@router.get("", response_model=ProdutoListResponseDTO)
 async def list_products(
     _: Annotated[Usuario, Depends(require_permission("estoque:write"))],
     skip: int = Query(0, ge=0),
